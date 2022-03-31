@@ -95,7 +95,7 @@ static int bellvolume = 0;
 char *termname = "st-256color";
 
 /* default class and name hints */
-static char *defaultclass = "st";
+static char *defaultclass = "st-256color";
 static char *defaultname = "st";
 
 /*
@@ -212,12 +212,12 @@ static MouseShortcut mshortcuts[] = {
 	{ XK_ANY_MOD,           Button5, ttysend,        {.s = "\005"} },
 };
 
-static ExternalPipe openurl = { .histlines = -1, .cmd = (char *const[]){ "pipeurl", NULL } };
-static ExternalPipe copyurl = { .histlines = -1, .cmd = (char *const[]){ "pipeurl", "-c", NULL } };
-static ExternalPipe editor  = { .histlines = -1, .cmd = (char *const[]){ "/bin/sh", "-c",
-    "f=$(mktemp) && trap 'rm -f \"$f\"' EXIT && cat > \"$f\" && st -e nvim -Rc'normal G' \"$f\"", NULL } };
-
-#define TERMMOD (ControlMask|ShiftMask)
+/* commands */
+#define CMD(...) { .histlines = -1, .cmd = (char *const[]){ __VA_ARGS__, NULL } };
+static ExternalPipe pipeurl = CMD("pipeurl", "-a")
+static ExternalPipe editor  = CMD( "/bin/sh", "-c",
+    "f=$(mktemp) && trap 'rm -f \"$f\"' EXIT && cat > \"$f\" && st -e nvim -Rc'normal G' \"$f\""
+)
 
 /* Internal keyboard shortcuts. */
 static Shortcut shortcuts[] = {
@@ -233,8 +233,7 @@ static Shortcut shortcuts[] = {
 	{ ControlMask|ShiftMask|Mod1Mask,     XK_K,           zoom,           {.f =  2} },
 	{ ControlMask|ShiftMask|Mod1Mask,     XK_J,           zoom,           {.f = -2} },
 	{ ControlMask|ShiftMask|Mod1Mask,     XK_N,           zoomreset,      {.f =  0} },
-	{ ControlMask|ShiftMask,              XK_U,           externalpipe,   {.v = &openurl } },
-	{ ControlMask|ShiftMask|Mod1Mask,     XK_U,           externalpipe,   {.v = &copyurl } },
+	{ ControlMask|ShiftMask|Mod1Mask,     XK_U,           externalpipe,   {.v = &pipeurl } },
 	{ ControlMask|ShiftMask,              XK_O,           externalpipe,   {.v = &editor  } },
 };
 
