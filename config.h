@@ -214,7 +214,7 @@ static MouseShortcut mshortcuts[] = {
 
 /* commands */
 #define CMD(...) { .histlines = -1, .cmd = (char *const[]){ __VA_ARGS__, NULL } };
-static ExternalPipe pipeurl = CMD("pipeurl", "-a")
+static ExternalPipe pipeurl = CMD("pipeurl", "ask")
 static ExternalPipe editor  = CMD( "/bin/sh", "-c",
     "f=$(mktemp) && trap 'rm -f \"$f\"' EXIT && cat > \"$f\" && st -e nvim -Rc'normal G' \"$f\""
 )
