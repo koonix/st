@@ -5,12 +5,12 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Fira Mono:pixelsize=16:antialias=true:autohint=true";
+static char *font = "Fira Mono:pixelsize=16";
 static char *font2[] = {
-	"DejaVu Sans Mono:pixelsize=16:antialias=true:autohint=true",
-	"Symbols Nerd Font:pixelsize=13:antialias=true:autohint=true",
-	"JoyPixels:pixelsize=13:antialias=true:autohint=true",
-	"Symbola:pixelsize=16:antialias=true:autohint=true",
+	"DejaVu Sans Mono:pixelsize=16",
+	"Symbols Nerd Font:pixelsize=13",
+	"JoyPixels:pixelsize=13",
+	"Symbola:pixelsize=16",
 };
 
 static int borderpx = 10;
