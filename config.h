@@ -5,13 +5,8 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Fira Mono:pixelsize=16";
-static char *font2[] = {
-	"DejaVu Sans Mono:pixelsize=16",
-	"Symbols Nerd Font:pixelsize=13",
-	"JoyPixels:pixelsize=13",
-	"Symbola:pixelsize=16",
-};
+static char *font = "monospace:pixelsize=18";
+static char *font2[] = {};
 
 static int borderpx = 10;
 
@@ -59,8 +54,8 @@ int resettitleonris = 0;
  * near minlatency, but it waits longer for slow updates to avoid partial draw.
  * low minlatency will tear/flicker more, as it can "detect" idle too early.
  */
-static double minlatency = 15;
-static double maxlatency = 40;
+static double minlatency = 8;
+static double maxlatency = 33;
 
 /*
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
@@ -125,7 +120,7 @@ static const char *colorname[] = {
 	"#4c9496", /* blue    */
 	"#c36c95", /* magenta */
 	"#73ad75", /* cyan    */
-	"#d5c4a1", /* white   */
+	"#c7c4bb", /* white   */
 
 	/* 8 bright colors */
 	"#665c54", /* black   */
@@ -135,13 +130,13 @@ static const char *colorname[] = {
 	"#83a598", /* blue    */
 	"#d3869b", /* magenta */
 	"#8ec07c", /* cyan    */
-	"#fbf1c7", /* white   */
+	"#e6e2d8", /* white   */
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with defaultXX */
-	"#0f161e", /* default background (orig: #1c1c1c) */
-	"#ebdbb2", /* default foreground */
+	"#0d0d0d", /* default background (orig: #1c1c1c) */
+	"#c7c4bb", /* default foreground (orig: #ebdbb2) */
 	"#bdae93", /* cursor */
 	"#504945", /* selection */
 };
@@ -230,8 +225,8 @@ static Shortcut shortcuts[] = {
 	{ ControlMask|ShiftMask,              XK_J,           kscrolldown,    {.i =  1} },
 	{ ControlMask|ShiftMask,              XK_U,           kscrollup,      {.i = -2} },
 	{ ControlMask|ShiftMask,              XK_D,           kscrolldown,    {.i = -2} },
-	{ ControlMask|ShiftMask|Mod1Mask,     XK_K,           zoom,           {.f =  2} },
-	{ ControlMask|ShiftMask|Mod1Mask,     XK_J,           zoom,           {.f = -2} },
+	{ ControlMask|ShiftMask|Mod1Mask,     XK_K,           zoom,           {.f =  1} },
+	{ ControlMask|ShiftMask|Mod1Mask,     XK_J,           zoom,           {.f = -1} },
 	{ ControlMask|ShiftMask|Mod1Mask,     XK_N,           zoomreset,      {.f =  0} },
 	{ ControlMask|ShiftMask|Mod1Mask,     XK_U,           externalpipe,   {.v = &pipeurl } },
 	{ ControlMask|ShiftMask,              XK_O,           externalpipe,   {.v = &editor  } },
