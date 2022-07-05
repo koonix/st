@@ -778,7 +778,6 @@ static Key key[] = {
 	{ XK_space,        Mod1Mask|ControlMask,           ESC"32;7u",    0,  0},
 	{ XK_space,        Mod1Mask|ControlMask|ShiftMask, ESC"32;8u",    0,  0},
 	{ XK_space,        Mod1Mask|ShiftMask,             ESC"32;4u",    0,  0},
-	{ XK_space,        ShiftMask,                      ESC"32;2u",    0,  0},
 	{ XK_0,            ControlMask,                    ESC"48;5u",    0,  0},
 	{ XK_A,            ControlMask|ShiftMask,          ESC"65;6u",    0,  0},
 	{ XK_B,            ControlMask|ShiftMask,          ESC"66;6u",    0,  0},
@@ -1018,6 +1017,10 @@ static Key key[] = {
 	{ XK_underscore,   Mod1Mask|ControlMask,           ESC"95;7u",    0,  0},
 	{ XK_underscore,   Mod1Mask|ControlMask|ShiftMask, ESC"95;8u",    0,  0},
 	{ XK_underscore,   Mod1Mask|ShiftMask,             ESC"95;4u",    0,  0},
+
+	/* interpreting shift+space as a special binding is annoying since this
+	 * key combo is very often pressed accidentally when typing regularly */
+	/* { XK_space,        ShiftMask,                      ESC"32;2u",    0,  0}, */
 
 	/* if these two are enabled, ctrl+i and ctrl+m won't act as Tab and Enter respectively. */
 	/* { XK_i,            ControlMask,                    ESC"105;5u",   0,  0}, */
