@@ -10,6 +10,11 @@ static char *font2[] = { "JoyPixels:pixelsize=16" };
 
 static int borderpx = 10;
 
+/* wether to interpret space+modkeys as special bindings.
+ * these bindings are annoying since these key combos are
+ * pressed accidentally very often when typing */
+#define SPACE_BINDINGS 0
+
 /*
  * What program is execed by st depends of these precedence rules:
  * 1: program passed with -e
@@ -263,7 +268,7 @@ static Shortcut shortcuts[] = {
  * to be mapped below, add them to this array.
  */
 static KeySym mappedkeys[] = {
-	XK_space, XK_m, XK_i, XK_A, XK_B, XK_C, XK_D, XK_E, XK_F, XK_G, XK_H,
+	XK_m, XK_i, XK_A, XK_B, XK_C, XK_D, XK_E, XK_F, XK_G, XK_H,
 	XK_I, XK_K, XK_J, XK_L, XK_M, XK_N, XK_O, XK_P, XK_Q, XK_R, XK_S, XK_T,
 	XK_U, XK_V, XK_W, XK_X, XK_Y, XK_Z, XK_Z, XK_0, XK_1, XK_2, XK_3, XK_4,
 	XK_5, XK_6, XK_7, XK_8, XK_9, XK_exclam, XK_quotedbl, XK_numbersign,
@@ -273,6 +278,9 @@ static KeySym mappedkeys[] = {
 	XK_question, XK_at, XK_bracketleft, XK_backslash, XK_bracketright,
 	XK_asciicircum, XK_underscore, XK_grave, XK_braceleft, XK_bar,
 	XK_braceright, XK_asciitilde,
+#if SPACE_BINDINGS
+	XK_space,
+#endif
 };
 
 /*
@@ -773,11 +781,6 @@ static Key key[] = {
 	{ XK_Delete,       Mod1Mask|ShiftMask,             ESC"255;4u",   0,  0},
 	{ XK_i,            Mod1Mask|ControlMask,           ESC"105;7u",   0,  0},
 	{ XK_m,            Mod1Mask|ControlMask,           ESC"109;7u",   0,  0},
-	{ XK_space,        ControlMask|ShiftMask,          ESC"32;6u",    0,  0},
-	{ XK_space,        Mod1Mask,                       ESC"32;3u",    0,  0},
-	{ XK_space,        Mod1Mask|ControlMask,           ESC"32;7u",    0,  0},
-	{ XK_space,        Mod1Mask|ControlMask|ShiftMask, ESC"32;8u",    0,  0},
-	{ XK_space,        Mod1Mask|ShiftMask,             ESC"32;4u",    0,  0},
 	{ XK_0,            ControlMask,                    ESC"48;5u",    0,  0},
 	{ XK_A,            ControlMask|ShiftMask,          ESC"65;6u",    0,  0},
 	{ XK_B,            ControlMask|ShiftMask,          ESC"66;6u",    0,  0},
@@ -1017,10 +1020,14 @@ static Key key[] = {
 	{ XK_underscore,   Mod1Mask|ControlMask,           ESC"95;7u",    0,  0},
 	{ XK_underscore,   Mod1Mask|ControlMask|ShiftMask, ESC"95;8u",    0,  0},
 	{ XK_underscore,   Mod1Mask|ShiftMask,             ESC"95;4u",    0,  0},
-
-	/* interpreting shift+space as a special binding is annoying since this
-	 * key combo is very often pressed accidentally when typing regularly */
-	/* { XK_space,        ShiftMask,                      ESC"32;2u",    0,  0}, */
+#if SPACE_BINDINGS
+	{ XK_space,        ControlMask|ShiftMask,          ESC"32;6u",    0,  0},
+	{ XK_space,        Mod1Mask,                       ESC"32;3u",    0,  0},
+	{ XK_space,        Mod1Mask|ControlMask,           ESC"32;7u",    0,  0},
+	{ XK_space,        Mod1Mask|ControlMask|ShiftMask, ESC"32;8u",    0,  0},
+	{ XK_space,        Mod1Mask|ShiftMask,             ESC"32;4u",    0,  0},
+	{ XK_space,        ShiftMask,                      ESC"32;2u",    0,  0},
+#endif
 
 	/* if these two are enabled, ctrl+i and ctrl+m won't act as Tab and Enter respectively. */
 	/* { XK_i,            ControlMask,                    ESC"105;5u",   0,  0}, */
