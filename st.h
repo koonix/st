@@ -109,6 +109,8 @@ size_t ttyread(void);
 void ttyresize(int, int);
 void ttywrite(const char *, size_t, int);
 
+pid_t getshellpid(void);
+
 void resettitle(void);
 
 void plumb(int, int, char *);

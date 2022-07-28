@@ -1114,6 +1114,12 @@ ttyhangup(void)
 	kill(pid, SIGHUP);
 }
 
+pid_t
+getshellpid(void)
+{
+	return pid;
+}
+
 int
 tattrset(int attr)
 {

@@ -8,6 +8,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <glob.h>
+#include <sys/stat.h>
+#include <pipeline.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/cursorfont.h>
@@ -2026,6 +2029,76 @@ kpress(XEvent *ev)
 	ttywrite(buf, len, 1);
 }
 
+long
+get_file_size(char *path)
+{
+	FILE *file = fopen(path, "r");
+	fseek(file, 0, SEEK_END);
+	long size = ftell(file);
+	fseek(file, 0, SEEK_SET);
+	fclose(file);
+	return size;
+}
+
+int
+haschildren(void)
+{
+	char ptrn[64];
+	char cmd[64];
+	glob_t gl;
+	int gl_ret, ret = 0;
+	struct stat st;
+
+	snprintf(ptrn, sizeof(ptrn), "/proc/%u/task/[0-9]*/children", (unsigned int)getshellpid());
+	/* char *ptrn = "/proc/self/task/[0-9]* /children"; */
+	gl_ret = glob(ptrn, GLOB_NOSORT, NULL, &gl);
+
+	if (gl_ret == GLOB_NOMATCH ||
+		gl_ret == GLOB_ABORTED ||
+		gl_ret == GLOB_NOSPACE)
+		ret = 0;
+
+	for (int i = 0; i < gl.gl_pathc; i++) {
+		/* snprintf(cmd, sizeof(cmd), "notify-send '%u - %d - %s - %d'", (unsigned int)getshellpid(), gl.gl_pathc, gl.gl_pathv[i], get_file_size(gl.gl_pathv[i])); */
+		/* system(cmd); */
+		if (get_file_size(gl.gl_pathv[i]) > 0) {
+			ret = 1;
+			break;
+		}
+		/* if (stat(gl.gl_pathv[i], &st) == 0 && st.st_size > 0) { */
+		/* 	ret = 1; */
+		/* 	break; */
+		/* } */
+	}
+
+	globfree(&gl);
+	return ret;
+}
+
+int
+canclose(void)
+{
+	pid_t pid;
+	pipeline *p;
+	char *answer;
+	int ret = 0;
+
+	if (!haschildren())
+		return 1;
+
+	p = pipeline_new();
+	pipeline_want_out(p, -1);
+	pipeline_command_args(p, "printf", "%s\n", "No", "Yes", NULL);
+	pipeline_command_args(p, "dmenu", "-p", "force close dwm?", NULL);
+	pipeline_start(p);
+	answer = (char *)pipeline_readline(p);
+	if (strstr(answer, "Yes") == 0)
+		ret = 1;
+	pipeline_free(p);
+
+	return ret;
+}
+
 void
 cmessage(XEvent *e)
 {
@@ -2040,7 +2113,7 @@ cmessage(XEvent *e)
 		} else if (e->xclient.data.l[1] == XEMBED_FOCUS_OUT) {
 			win.mode &= ~MODE_FOCUSED;
 		}
-	} else if (e->xclient.data.l[0] == xw.wmdeletewin) {
+	} else if (e->xclient.data.l[0] == xw.wmdeletewin && canclose()) {
 		ttyhangup();
 		exit(0);
 	}
