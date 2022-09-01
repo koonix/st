@@ -10,7 +10,7 @@ static char *font2[] = { "JoyPixels:pixelsize=16" };
 
 static int borderpx = 10;
 
-/* wether to interpret space+modkeys as special bindings.
+/* wether to interpret space+modkeys and backspace+modkeys as special bindings.
  * these bindings are annoying since these key combos are
  * pressed accidentally very often when typing */
 #define SPACE_BINDINGS 0
@@ -685,13 +685,6 @@ static Key key[] = {
 	{ XK_KP_9,         Mod1Mask|ControlMask|ShiftMask, ESC"185;8u",   0,  0},
 	{ XK_KP_9,         Mod1Mask|ShiftMask,             ESC"185;4u",   0,  0},
 	{ XK_KP_9,         ShiftMask,                      ESC"185;2u",   0,  0},
-	{ XK_BackSpace,    ControlMask,                    ESC"127;5u",   0,  0},
-	{ XK_BackSpace,    ControlMask|ShiftMask,          ESC"127;6u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask,                       ESC"127;3u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask|ControlMask,           ESC"127;7u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask|ControlMask|ShiftMask, ESC"127;8u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask|ShiftMask,             ESC"127;4u",   0,  0},
-	{ XK_BackSpace,    ShiftMask,                      ESC"127;2u",   0,  0},
 	{ XK_Tab,          ControlMask,                    ESC"9;5u",     0,  0},
 	{ XK_Tab,          ControlMask|ShiftMask,          "\033[1;5Z",   0,  0},
 	{ XK_Tab,          Mod1Mask,                       "\033[1;3Z",   0,  0},
@@ -1027,6 +1020,13 @@ static Key key[] = {
 	{ XK_space,        Mod1Mask|ControlMask|ShiftMask, ESC"32;8u",    0,  0},
 	{ XK_space,        Mod1Mask|ShiftMask,             ESC"32;4u",    0,  0},
 	{ XK_space,        ShiftMask,                      ESC"32;2u",    0,  0},
+	{ XK_BackSpace,    ControlMask,                    ESC"127;5u",   0,  0},
+	{ XK_BackSpace,    ControlMask|ShiftMask,          ESC"127;6u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask,                       ESC"127;3u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask|ControlMask,           ESC"127;7u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask|ControlMask|ShiftMask, ESC"127;8u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask|ShiftMask,             ESC"127;4u",   0,  0},
+	{ XK_BackSpace,    ShiftMask,                      ESC"127;2u",   0,  0},
 #endif
 
 	/* if these two are enabled, ctrl+i and ctrl+m won't act as Tab and Enter respectively. */
