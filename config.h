@@ -8,7 +8,8 @@
 static char *font = "monospace:size=13";
 static char *font2[] = { "JoyPixels:pixelsize=16" };
 
-static int borderpx = 10;
+/* width of the border relative to the width of a terminal cell */
+static float borderwidth = 1.8;
 
 /* wether to interpret space+modkeys and backspace+modkeys as special bindings.
  * these bindings are annoying since these key combos are

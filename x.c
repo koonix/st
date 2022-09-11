@@ -224,6 +224,7 @@ static XSelection xsel;
 static TermWindow win;
 static int tstki[2]; /* title and icon title stack indices */
 static char *titlestack[2][TITLESTACKSIZE]; /* title and icon title stack */
+static int borderpx;
 
 /* Font Ring Cache */
 enum {
@@ -1042,6 +1043,8 @@ xloadfonts(const char *fontstr, double fontsize)
 	/* Setting character width and height. */
 	win.cw = ceilf(dc.font.width * cwscale);
 	win.ch = ceilf(dc.font.height * chscale);
+
+	borderpx = ceilf(borderwidth * win.cw);
 
 	FcPatternDel(pattern, FC_SLANT);
 	FcPatternAddInteger(pattern, FC_SLANT, FC_SLANT_ITALIC);
