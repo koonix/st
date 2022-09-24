@@ -1,16 +1,17 @@
-/* See LICENSE file for copyright and license details. */
+/* st's config
+ * See LICENSE file for copyright and license details. */
 
-/*
- * appearance
- *
- * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
- */
+/* fonts */
 static char *font = "monospace:size=13";
-static char *font2[] = { "JoyPixels:pixelsize=16" };
+static char *font2[] = {
+	":lang=fa:spacing=mono:size=14",
+	"Symbols Nerd Font:size=11", /* you must put nerd fonts under the alias 'nerd' in fontconfig */
+};
 
-static int borderpx = 10;
+/* width of the border relative to the width of a terminal cell */
+static float borderwidth = 1.8;
 
-/* wether to interpret space+modkeys as special bindings.
+/* wether to interpret space+modkeys and backspace+modkeys as special bindings.
  * these bindings are annoying since these key combos are
  * pressed accidentally very often when typing */
 #define SPACE_BINDINGS 0
@@ -78,7 +79,7 @@ const int boxdraw = 1;
 const int boxdraw_bold = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
-const int boxdraw_braille = 0;
+const int boxdraw_braille = 1;
 
 /*
  * thickness of underline and bar cursors
@@ -140,8 +141,8 @@ static const char *colorname[] = {
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with defaultXX */
-	"#0d0d0d", /* default background (orig: #1c1c1c) */
-	"#c7c4bb", /* default foreground (orig: #ebdbb2) */
+	"#181b1c", /* default background */
+	"#c7c4bb", /* default foreground */
 	"#bdae93", /* cursor */
 	"#504945", /* selection */
 };
@@ -240,6 +241,7 @@ static Shortcut shortcuts[] = {
 	{ CtrlShiftAlt,           XK_N,           zoomreset,      {.f =  0} },
 	{ CtrlShiftAlt,           XK_U,           externalpipe,   {.v = &pipeurl } },
 	{ CtrlShift,              XK_O,           externalpipe,   {.v = &editor  } },
+	{ CtrlShift,              XK_space,       ttysend,        {.s = "    "   } },
 };
 
 /*
@@ -685,13 +687,6 @@ static Key key[] = {
 	{ XK_KP_9,         Mod1Mask|ControlMask|ShiftMask, ESC"185;8u",   0,  0},
 	{ XK_KP_9,         Mod1Mask|ShiftMask,             ESC"185;4u",   0,  0},
 	{ XK_KP_9,         ShiftMask,                      ESC"185;2u",   0,  0},
-	{ XK_BackSpace,    ControlMask,                    ESC"127;5u",   0,  0},
-	{ XK_BackSpace,    ControlMask|ShiftMask,          ESC"127;6u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask,                       ESC"127;3u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask|ControlMask,           ESC"127;7u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask|ControlMask|ShiftMask, ESC"127;8u",   0,  0},
-	{ XK_BackSpace,    Mod1Mask|ShiftMask,             ESC"127;4u",   0,  0},
-	{ XK_BackSpace,    ShiftMask,                      ESC"127;2u",   0,  0},
 	{ XK_Tab,          ControlMask,                    ESC"9;5u",     0,  0},
 	{ XK_Tab,          ControlMask|ShiftMask,          "\033[1;5Z",   0,  0},
 	{ XK_Tab,          Mod1Mask,                       "\033[1;3Z",   0,  0},
@@ -1027,6 +1022,13 @@ static Key key[] = {
 	{ XK_space,        Mod1Mask|ControlMask|ShiftMask, ESC"32;8u",    0,  0},
 	{ XK_space,        Mod1Mask|ShiftMask,             ESC"32;4u",    0,  0},
 	{ XK_space,        ShiftMask,                      ESC"32;2u",    0,  0},
+	{ XK_BackSpace,    ControlMask,                    ESC"127;5u",   0,  0},
+	{ XK_BackSpace,    ControlMask|ShiftMask,          ESC"127;6u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask,                       ESC"127;3u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask|ControlMask,           ESC"127;7u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask|ControlMask|ShiftMask, ESC"127;8u",   0,  0},
+	{ XK_BackSpace,    Mod1Mask|ShiftMask,             ESC"127;4u",   0,  0},
+	{ XK_BackSpace,    ShiftMask,                      ESC"127;2u",   0,  0},
 #endif
 
 	/* if these two are enabled, ctrl+i and ctrl+m won't act as Tab and Enter respectively. */
