@@ -39,6 +39,12 @@ enum glyph_attribute {
 	ATTR_BOXDRAW    = 1 << 13,
 };
 
+enum drawing_mode {
+    DRAW_NONE = 0,
+    DRAW_BG = 1 << 0,
+    DRAW_FG = 1 << 1,
+};
+
 enum selection_mode {
 	SEL_IDLE = 0,
 	SEL_EMPTY = 1,
