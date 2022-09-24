@@ -241,6 +241,7 @@ static Shortcut shortcuts[] = {
 	{ CtrlShiftAlt,           XK_N,           zoomreset,      {.f =  0} },
 	{ CtrlShiftAlt,           XK_U,           externalpipe,   {.v = &pipeurl } },
 	{ CtrlShift,              XK_O,           externalpipe,   {.v = &editor  } },
+	{ CtrlShift,              XK_space,       ttysend,        {.s = "    "   } },
 };
 
 /*
