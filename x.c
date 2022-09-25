@@ -8,6 +8,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <glob.h>
+#include <sys/stat.h>
+#include <pipeline.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/cursorfont.h>
@@ -192,6 +195,9 @@ static void mousesel(XEvent *, int);
 static void mousereport(XEvent *);
 static char *kmap(KeySym, uint);
 static int match(uint, uint);
+static int isfileempty(char *path);
+static int haschildren(void);
+static int canclose(void);
 
 static void run(void);
 static void usage(void);
@@ -2033,6 +2039,68 @@ kpress(XEvent *ev)
 	ttywrite(buf, len, 1);
 }
 
+int
+isfileempty(char *path)
+{
+	char ctmp;
+	FILE *file = fopen(path, "r");
+	int isempty = fread(&ctmp, 1, 1, file) ? 0 : 1;
+	fclose(file);
+	return isempty;
+}
+
+int
+haschildren(void)
+{
+	char ptrn[64];
+	char cmd[64];
+	glob_t gl;
+	int gl_ret, ret = 0;
+	struct stat st;
+
+	snprintf(ptrn, sizeof(ptrn), "/proc/%u/task/[0-9]*/children", (unsigned int)getshellpid());
+	gl_ret = glob(ptrn, GLOB_NOSORT, NULL, &gl);
+
+	if (gl_ret == GLOB_NOMATCH ||
+		gl_ret == GLOB_ABORTED ||
+		gl_ret == GLOB_NOSPACE)
+		ret = 0;
+
+	for (int i = 0; i < gl.gl_pathc; i++) {
+		if (!isfileempty(gl.gl_pathv[i])) {
+			ret = 1;
+			break;
+		}
+	}
+
+	globfree(&gl);
+	return ret;
+}
+
+int
+canclose(void)
+{
+	pid_t pid;
+	pipeline *p;
+	char *answer;
+	int ret = 0;
+
+	if (!haschildren())
+		return 1;
+
+	p = pipeline_new();
+	pipeline_want_out(p, -1);
+	pipeline_command_args(p, "printf", "%s\n", "No", "Yes", NULL);
+	pipeline_command_args(p, "dmenu", "-p", "force close dwm?", "-w", getenv("WINDOWID"), NULL);
+	pipeline_start(p);
+	answer = (char *)pipeline_readline(p);
+	if (answer && strncmp(answer, "Yes", 3) == 0)
+		ret = 1;
+	pipeline_free(p);
+
+	return ret;
+}
+
 void
 cmessage(XEvent *e)
 {
@@ -2047,7 +2115,7 @@ cmessage(XEvent *e)
 		} else if (e->xclient.data.l[1] == XEMBED_FOCUS_OUT) {
 			win.mode &= ~MODE_FOCUSED;
 		}
-	} else if (e->xclient.data.l[0] == xw.wmdeletewin) {
+	} else if (e->xclient.data.l[0] == xw.wmdeletewin && canclose()) {
 		ttyhangup();
 		exit(0);
 	}
