@@ -194,6 +194,9 @@ static void mousesel(XEvent *, int);
 static void mousereport(XEvent *);
 static char *kmap(KeySym, uint);
 static int match(uint, uint);
+static int isfileempty(char *path);
+static int haschildren(void);
+static int canclose(void);
 
 static void run(void);
 static void usage(void);
@@ -2029,15 +2032,14 @@ kpress(XEvent *ev)
 	ttywrite(buf, len, 1);
 }
 
-long
-get_file_size(char *path)
+int
+isfileempty(char *path)
 {
+	char ctmp;
 	FILE *file = fopen(path, "r");
-	fseek(file, 0, SEEK_END);
-	long size = ftell(file);
-	fseek(file, 0, SEEK_SET);
+	int isempty = fread(&ctmp, 1, 1, file) ? 0 : 1;
 	fclose(file);
-	return size;
+	return isempty;
 }
 
 int
@@ -2050,7 +2052,6 @@ haschildren(void)
 	struct stat st;
 
 	snprintf(ptrn, sizeof(ptrn), "/proc/%u/task/[0-9]*/children", (unsigned int)getshellpid());
-	/* char *ptrn = "/proc/self/task/[0-9]* /children"; */
 	gl_ret = glob(ptrn, GLOB_NOSORT, NULL, &gl);
 
 	if (gl_ret == GLOB_NOMATCH ||
@@ -2059,16 +2060,10 @@ haschildren(void)
 		ret = 0;
 
 	for (int i = 0; i < gl.gl_pathc; i++) {
-		/* snprintf(cmd, sizeof(cmd), "notify-send '%u - %d - %s - %d'", (unsigned int)getshellpid(), gl.gl_pathc, gl.gl_pathv[i], get_file_size(gl.gl_pathv[i])); */
-		/* system(cmd); */
-		if (get_file_size(gl.gl_pathv[i]) > 0) {
+		if (!isfileempty(gl.gl_pathv[i])) {
 			ret = 1;
 			break;
 		}
-		/* if (stat(gl.gl_pathv[i], &st) == 0 && st.st_size > 0) { */
-		/* 	ret = 1; */
-		/* 	break; */
-		/* } */
 	}
 
 	globfree(&gl);
@@ -2089,10 +2084,10 @@ canclose(void)
 	p = pipeline_new();
 	pipeline_want_out(p, -1);
 	pipeline_command_args(p, "printf", "%s\n", "No", "Yes", NULL);
-	pipeline_command_args(p, "dmenu", "-p", "force close dwm?", NULL);
+	pipeline_command_args(p, "dmenu", "-p", "force close dwm?", "-w", getenv("WINDOWID"), NULL);
 	pipeline_start(p);
 	answer = (char *)pipeline_readline(p);
-	if (strstr(answer, "Yes") == 0)
+	if (answer && strncmp(answer, "Yes", 3) == 0)
 		ret = 1;
 	pipeline_free(p);
 
