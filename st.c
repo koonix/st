@@ -40,7 +40,7 @@
 #define STR_BUF_SIZ   ESC_BUF_SIZ
 #define STR_ARG_SIZ   ESC_ARG_SIZ
 #define HISTSIZE      10000
-#define RESIZEBUFFER  1000
+#define RESIZEBUFFER  (HISTSIZE / 2)
 
 /* macros */
 #define IS_SET(flag)		((term.mode & (flag)) != 0)
