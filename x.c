@@ -2085,6 +2085,9 @@ canclose(void)
 	char *answer;
 	int ret = 0;
 
+	if (allowforceclose)
+		return 1;
+
 	if (!haschildren())
 		return 1;
 

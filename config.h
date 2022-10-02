@@ -16,6 +16,9 @@ static float borderwidth = 1.8;
  * pressed accidentally very often when typing */
 #define SPACE_BINDINGS 0
 
+/* wether to confirm before closing when there is an active child process */
+static const int allowforceclose = 1;
+
 /*
  * What program is execed by st depends of these precedence rules:
  * 1: program passed with -e
