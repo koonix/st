@@ -231,7 +231,7 @@ static XSelection xsel;
 static TermWindow win;
 static int tstki[2]; /* title and icon title stack indices */
 static char *titlestack[2][TITLESTACKSIZE]; /* title and icon title stack */
-static int borderpx;
+static int hborderpx, vborderpx;
 
 /* Font Ring Cache */
 enum {
@@ -753,13 +753,16 @@ cresize(int width, int height)
 	if (height != 0)
 		win.h = height;
 
-	col = (win.w - 2 * borderpx) / win.cw;
-	row = (win.h - 2 * borderpx) / win.ch;
+	col = (win.w - 2 * hborderpx) / win.cw;
+	row = (win.h - 2 * vborderpx) / win.ch;
 	col = MAX(1, col);
 	row = MAX(1, row);
 
 	win.hborderpx = (win.w - col * win.cw) / 2;
-	win.vborderpx = (win.h - row * win.ch) / 2;
+	if (bindvtoh >= 0)
+		win.vborderpx = win.hborderpx * bindvtoh;
+	else
+		win.vborderpx = (win.h - row * win.ch) / 2;
 
 	tresize(col, row);
 	xresize(col, row);
@@ -893,10 +896,10 @@ xhints(void)
 	sizeh->width = win.w;
 	sizeh->height_inc = 1;
 	sizeh->width_inc = 1;
-	sizeh->base_height = 2 * borderpx;
-	sizeh->base_width = 2 * borderpx;
-	sizeh->min_height = win.ch + 2 * borderpx;
-	sizeh->min_width = win.cw + 2 * borderpx;
+	sizeh->base_height = 2 * vborderpx;
+	sizeh->base_width = 2 * hborderpx;
+	sizeh->min_height = win.ch + 2 * vborderpx;
+	sizeh->min_width = win.cw + 2 * hborderpx;
 	if (xw.isfixed) {
 		sizeh->flags |= PMaxSize;
 		sizeh->min_width = sizeh->max_width = win.w;
@@ -1054,7 +1057,8 @@ xloadfonts(const char *fontstr, double fontsize)
 	win.cw = ceilf(dc.font.width * cwscale);
 	win.ch = ceilf(dc.font.height * chscale);
 
-	borderpx = ceilf(borderwidth * win.cw);
+	hborderpx  = ceilf(hborderwidth * win.cw);
+	vborderpx  = ceilf(vborderwidth * win.cw);
 
 	FcPatternDel(pattern, FC_SLANT);
 	FcPatternAddInteger(pattern, FC_SLANT, FC_SLANT_ITALIC);
@@ -1272,8 +1276,8 @@ xinit(int cols, int rows)
 	xloadcols();
 
 	/* adjust fixed window geometry */
-	win.w = 2 * win.hborderpx + 2 * borderpx + cols * win.cw;
-	win.h = 2 * win.vborderpx + 2 * borderpx + rows * win.ch;
+	win.w = 2 * win.hborderpx + 2 * hborderpx + cols * win.cw;
+	win.h = 2 * win.vborderpx + 2 * vborderpx + rows * win.ch;
 	if (xw.gm & XNegative)
 		xw.l += DisplayWidth(xw.dpy, xw.scr) - win.w - 2;
 	if (xw.gm & YNegative)
@@ -1846,8 +1850,8 @@ xximspot(int x, int y)
 	if (xw.ime.xic == NULL)
 		return;
 
-	xw.ime.spot.x = borderpx + x * win.cw;
-	xw.ime.spot.y = borderpx + (y + 1) * win.ch;
+	xw.ime.spot.x = hborderpx + x * win.cw;
+	xw.ime.spot.y = vborderpx + (y + 1) * win.ch;
 
 	XSetICValues(xw.ime.xic, XNPreeditAttributes, xw.ime.spotlist, NULL);
 }

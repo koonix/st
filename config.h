@@ -9,7 +9,12 @@ static char *font2[] = {
 };
 
 /* width of the border relative to the width of a terminal cell */
-static float borderwidth = 1.8;
+static float hborderwidth = 2.0;
+static float vborderwidth = 1.2;
+
+/* set the top border to this multiple of left border.
+ * set to a negative value to disable */
+static float bindvtoh = 0.8;
 
 /* wether to interpret space+modkeys and backspace+modkeys as special bindings.
  * these bindings are annoying since these key combos are
