@@ -250,6 +250,7 @@ static Shortcut shortcuts[] = {
 	{ CtrlShiftAlt,           XK_U,           externalpipe,   {.v = &pipeurl } },
 	{ CtrlShift,              XK_O,           externalpipe,   {.v = &editor  } },
 	{ CtrlShift,              XK_space,       ttysend,        {.s = "    "   } },
+	{ CtrlShift,              XK_underscore,  ttysend,        {.s = "->"     } },
 };
 
 /*
