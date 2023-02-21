@@ -22,7 +22,7 @@ static float bindvtoh = 0.8;
 #define SPACE_BINDINGS 0
 
 /* wether to confirm before closing when there is an active child process */
-static const int allowforceclose = 1;
+static const int allowforceclose = 0;
 
 /*
  * What program is execed by st depends of these precedence rules:
