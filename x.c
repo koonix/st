@@ -2101,7 +2101,7 @@ canclose(void)
 	p = pipeline_new();
 	pipeline_want_out(p, -1);
 	pipeline_command_args(p, "printf", "%s\n", "No", "Yes", NULL);
-	pipeline_command_args(p, "dmenu", "-p", "force close dwm?", "-w", getenv("WINDOWID"), NULL);
+	pipeline_command_args(p, "dmenu", "-p", "force close st?", "-w", getenv("WINDOWID"), NULL);
 	pipeline_start(p);
 	answer = (char *)pipeline_readline(p);
 	if (answer && strncmp(answer, "Yes", 3) == 0)
